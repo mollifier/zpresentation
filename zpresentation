@@ -72,10 +72,14 @@ function _zpresentation_main()
   local mode
   local header_id
   local paragraph_id
+  local input_file=""
 
   local option OPTARG OPTIND
-  while getopts ':e:p:h' option; do
+  while getopts ':f:e:p:h' option; do
     case $option in
+      f)
+        input_file="$OPTARG"
+        ;;
       e)
         mode="header"
         header_id="$OPTARG"
@@ -100,7 +104,9 @@ function _zpresentation_main()
   done
   shift $(expr $OPTIND - 1)
 
-  local input_file="$1"
+  if [[ -z "$input_file" ]]; then
+    input_file="$1"
+  fi
 
   case "$mode" in
     header)
