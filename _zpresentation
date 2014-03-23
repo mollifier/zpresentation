@@ -16,6 +16,19 @@
 #
 # ------------------------------------------------------------------------------
 
+declare -a opts args
+args=(
+  '-h[display this help and exit]'
+  '(-)*:file:_files'
+)
+local curcontext=$curcontext state line ret=1
+declare -A opt_args
+
+
+_arguments -C $opts \
+  $args && ret=0
+
+return $ret
 
 # Local Variables:
 # mode: Shell-Script
