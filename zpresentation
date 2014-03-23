@@ -63,7 +63,7 @@ function _zpresentation_display_markdown_paragraph()
   local header_line_number="$(_zpresentation_display_markdown_header_line_number "$input_file" "$paragraph_id")"
   local next_header_line_number="$(_zpresentation_display_markdown_header_line_number "$input_file" "$next_paragraph_id")"
 
-  cat -- "$file" | sed -n "${header_line_number},$(( $next_header_line_number - 1 ))p"
+  cat -- "$file" | sed -n "$(( header_line_number + 1 )),$(( $next_header_line_number - 1 ))p"
 }
 
 function _zpresentation_main()
