@@ -1,0 +1,17 @@
+# zpresentation - zsh plugin for presentation
+#
+# Copyright (c) 2014 Hideaki Miyake
+# Licensed under the MIT License (MIT)
+#
+# Author : Hideaki Miyake (https://github.com/mollifier)
+# URL : https://github.com/mollifier/zpresentation
+#
+
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et
