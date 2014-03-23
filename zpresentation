@@ -44,10 +44,12 @@ function _zpresentation_display_markdown_header()
 function _zpresentation_display_markdown_header_line_number()
 {
   local file="$1"
-  # header_level is number (1, 2, 3, ...)
-  local header_level="$2"
+  # header_id is number (1, 2, 3, ...)
+  local header_id="$2"
 
-  grep -nE "^#{$header_level} " -- "$file" | sed 's/:.*$//'
+  grep -nE "^#+[ \t]" -- "$file" \
+    | sed 's/:.*$//' \
+    | sed -n "${header_id}p"
 }
 
 # 指定した見出しから次の見出しまでを出力する
@@ -98,8 +100,8 @@ function _zpresentation_main()
 
   case "$mode" in
     header)
-      _zpresentation_display_markdown_header "$input_file" "$header_id"
-      #_zpresentation_display_markdown_header_line_number "$input_file" "$header_level"
+      #_zpresentation_display_markdown_header "$input_file" "$header_id"
+      _zpresentation_display_markdown_header_line_number "$input_file" "$header_id"
       ;;
     paragraph)
       _zpresentation_display_markdown_paragraph "$input_file" "$header_string"
