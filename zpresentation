@@ -49,6 +49,8 @@ function _zpresentation_display_markdown_paragraph()
 
 function _zpresentation_main()
 {
+  # header, paragraph, ...
+  local mode
   local header_level
   local header_string
 
@@ -56,9 +58,11 @@ function _zpresentation_main()
   while getopts ':e:p:h' option; do
     case $option in
       e)
+        mode="header"
         header_level="$OPTARG"
         ;;
       p)
+        mode="paragraph"
         header_string="$OPTARG"
         ;;
       h)
@@ -77,11 +81,18 @@ function _zpresentation_main()
   done
   shift $(expr $OPTIND - 1)
 
-  # TODO: 
   local input_file="$1"
 
-  #_zpresentation_display_markdown_header "$input_file" "$header_level"
-  _zpresentation_display_markdown_paragraph "$input_file" "$header_string"
+  case "$mode" in
+    header)
+      _zpresentation_display_markdown_header "$input_file" "$header_level"
+      ;;
+    paragraph)
+      _zpresentation_display_markdown_paragraph "$input_file" "$header_string"
+      ;;
+  esac
+
+
 }
 
 #set -o xtrace
