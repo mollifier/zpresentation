@@ -38,13 +38,23 @@ function _zpresentation_display_markdown_header()
   grep -E "^#{$header_level} " -- "$file"
 }
 
+function _zpresentation_display_markdown_header_line_number()
+{
+  local file="$1"
+  # header_level is number (1, 2, 3, ...)
+  local header_level="$2"
+
+  grep -nE "^#{$header_level} " -- "$file" | sed 's/:.*$//'
+}
+
+# 指定した見出しから次の見出しまでを出力する
+# 次の見出し(同じレベルとは限らない)までを1ページ分のスライドとみなす
 function _zpresentation_display_markdown_paragraph()
 {
   local file="$1"
-  local header_string="$2"
+  local header_line_number="$2"
 
-  local escaped_header_string="$(_zpresentation_escape_regex "$header_string")"
-  grep -E "^#+[ \t]+$escaped_header_string" -- "$file"
+  cat -- "$file" | sed -n "$header_line_number,/^#/p"
 }
 
 function _zpresentation_main()
@@ -86,6 +96,7 @@ function _zpresentation_main()
   case "$mode" in
     header)
       _zpresentation_display_markdown_header "$input_file" "$header_level"
+      _zpresentation_display_markdown_header_line_number "$input_file" "$header_level"
       ;;
     paragraph)
       _zpresentation_display_markdown_paragraph "$input_file" "$header_string"
