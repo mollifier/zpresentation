@@ -35,7 +35,10 @@ function _zpresentation_display_markdown_header()
   # header_id is number (1, 2, 3, ...)
   local header_id="$2"
 
-  grep -E "^#+ " -- "$file" | sed -n "${header_id}p"
+  # remove header symbol (e.g. ## )
+  grep -E "^#+[ \t]" -- "$file" \
+    | sed 's/^#\{1,\}[ \t]\{1,\}//' \
+    | sed -n "${header_id}p"
 }
 
 function _zpresentation_display_markdown_header_line_number()
