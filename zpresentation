@@ -116,8 +116,12 @@ function _zpresentation_main()
 }
 
 #set -o xtrace
+# treat unset parameters as an error
+set -o no_unset
 
 _zpresentation_main "$@"
+
+set +o no_unset
 
 #set +o xtrace
 
