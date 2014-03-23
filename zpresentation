@@ -32,10 +32,10 @@ function _zpresentation_escape_regex()
 function _zpresentation_display_markdown_header()
 {
   local file="$1"
-  # header_level is number (1, 2, 3, ...)
-  local header_level="$2"
+  # header_id is number (1, 2, 3, ...)
+  local header_id="$2"
 
-  grep -E "^#{$header_level} " -- "$file"
+  grep -E "^#+ " -- "$file" | sed -n "${header_id}p"
 }
 
 function _zpresentation_display_markdown_header_line_number()
@@ -61,7 +61,7 @@ function _zpresentation_main()
 {
   # header, paragraph, ...
   local mode
-  local header_level
+  local header_id
   local header_string
 
   local option OPTARG OPTIND
@@ -69,7 +69,7 @@ function _zpresentation_main()
     case $option in
       e)
         mode="header"
-        header_level="$OPTARG"
+        header_id="$OPTARG"
         ;;
       p)
         mode="paragraph"
@@ -95,8 +95,8 @@ function _zpresentation_main()
 
   case "$mode" in
     header)
-      _zpresentation_display_markdown_header "$input_file" "$header_level"
-      _zpresentation_display_markdown_header_line_number "$input_file" "$header_level"
+      _zpresentation_display_markdown_header "$input_file" "$header_id"
+      #_zpresentation_display_markdown_header_line_number "$input_file" "$header_level"
       ;;
     paragraph)
       _zpresentation_display_markdown_paragraph "$input_file" "$header_string"
