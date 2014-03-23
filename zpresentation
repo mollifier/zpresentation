@@ -24,6 +24,14 @@ function _zpresentation_print_error()
   echo "Try \`-h' option for more information." 1>&2
 }
 
+function _zpresentation_display_markdown_header()
+{
+  local file=$1
+  local header_level=$2
+
+  grep "^#\\{$header_level\\} " -- "$file"
+}
+
 function _zpresentation_main()
 {
   local option OPTARG OPTIND
@@ -46,10 +54,17 @@ function _zpresentation_main()
   shift $(expr $OPTIND - 1)
 
   # TODO: 
-  echo "main function"
+  local input_file="$1"
+  _zpresentation_display_markdown_header "$input_file" 1
+  _zpresentation_display_markdown_header "$input_file" 2
+  _zpresentation_display_markdown_header "$input_file" 3
 }
 
+#set -o xtrace
+
 _zpresentation_main "$@"
+
+#set +o xtrace
 
 # Local Variables:
 # mode: Shell-Script
