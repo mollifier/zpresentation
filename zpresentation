@@ -57,8 +57,9 @@ function _zpresentation_display_markdown_header_line_number()
 function _zpresentation_display_markdown_paragraph()
 {
   local file="$1"
-  local header_line_number="$2"
+  local paragraph_id="$2"
 
+  local header_line_number="$(_zpresentation_display_markdown_header_line_number "$input_file" "$paragraph_id")"
   cat -- "$file" | sed -n "$header_line_number,/^#/p"
 }
 
@@ -67,7 +68,7 @@ function _zpresentation_main()
   # header, paragraph, ...
   local mode
   local header_id
-  local header_string
+  local paragraph_id
 
   local option OPTARG OPTIND
   while getopts ':e:p:h' option; do
@@ -78,7 +79,7 @@ function _zpresentation_main()
         ;;
       p)
         mode="paragraph"
-        header_string="$OPTARG"
+        paragraph_id="$OPTARG"
         ;;
       h)
         _zpresentation_print_usage
@@ -100,11 +101,11 @@ function _zpresentation_main()
 
   case "$mode" in
     header)
-      #_zpresentation_display_markdown_header "$input_file" "$header_id"
-      _zpresentation_display_markdown_header_line_number "$input_file" "$header_id"
+      _zpresentation_display_markdown_header "$input_file" "$header_id"
+      #_zpresentation_display_markdown_header_line_number "$input_file" "$header_id"
       ;;
     paragraph)
-      _zpresentation_display_markdown_paragraph "$input_file" "$header_string"
+      _zpresentation_display_markdown_paragraph "$input_file" "$paragraph_id"
       ;;
   esac
 
