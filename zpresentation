@@ -34,9 +34,14 @@ function _zpresentation_display_markdown_header()
 
 function _zpresentation_main()
 {
+  local header_level
+
   local option OPTARG OPTIND
-  while getopts ':h' option; do
+  while getopts ':e:h' option; do
     case $option in
+      e)
+        header_level="$OPTARG"
+        ;;
       h)
         _zpresentation_print_usage
         return 0
@@ -55,9 +60,8 @@ function _zpresentation_main()
 
   # TODO: 
   local input_file="$1"
-  _zpresentation_display_markdown_header "$input_file" 1
-  _zpresentation_display_markdown_header "$input_file" 2
-  _zpresentation_display_markdown_header "$input_file" 3
+
+  _zpresentation_display_markdown_header "$input_file" "$header_level"
 }
 
 #set -o xtrace
