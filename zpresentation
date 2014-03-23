@@ -26,24 +26,24 @@ function _zpresentation_print_error()
 
 function _zpresentation_escape_regex()
 {
-  echo "$1" | sed -e 's/[][^\\.*$(){}+?|-]/\\&/g'
+  echo -nE "$1" | sed -e 's/[][^\\.*$(){}+?|-]/\\&/g'
 }
 
 function _zpresentation_display_markdown_header()
 {
-  local file=$1
+  local file="$1"
   # header_level is number (1, 2, 3, ...)
-  local header_level=$2
+  local header_level="$2"
 
   grep -E "^#{$header_level} " -- "$file"
 }
 
 function _zpresentation_display_markdown_paragraph()
 {
-  local file=$1
-  local header_string=$2
+  local file="$1"
+  local header_string="$2"
 
-  local escaped_header_string=$(_zpresentation_escape_regex "$header_string")
+  local escaped_header_string="$(_zpresentation_escape_regex "$header_string")"
   grep -E "^#+[ \t]+$escaped_header_string" -- "$file"
 }
 
