@@ -29,16 +29,24 @@ function _zpresentation_escape_regex()
   echo -nE "$1" | sed -e 's/[][^\\.*$(){}+?|-]/\\&/g'
 }
 
+# すべてのヘッダ行を表示する
+function _zpresentation_display_all_markdown_header()
+{
+  local file="$1"
+
+  # remove header symbol (e.g. ## )
+  grep -E "^#+[ \t]" -- "$file" \
+    | sed 's/^#\{1,\}[ \t]\{1,\}//'
+}
+
+# 指定されたIDに対応するヘッダ行を表示する
 function _zpresentation_display_markdown_header()
 {
   local file="$1"
   # header_id is number (1, 2, 3, ...)
   local header_id="$2"
 
-  # remove header symbol (e.g. ## )
-  grep -E "^#+[ \t]" -- "$file" \
-    | sed 's/^#\{1,\}[ \t]\{1,\}//' \
-    | sed -n "${header_id}p"
+  _zpresentation_display_all_markdown_header "$file" | sed -n "${header_id}p"
 }
 
 function _zpresentation_display_markdown_header_line_number()
