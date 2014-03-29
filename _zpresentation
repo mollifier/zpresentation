@@ -19,18 +19,21 @@
 declare -a opts args
 args=(
   '-h[display this help and exit]'
+  '-f[input file]:input_files:_files'
+  '-e[xxx]:header_list:_zpresentation_header'
   '(-)*:file:_files'
 )
 local curcontext=$curcontext state line ret=1
 declare -A opt_args
 
 
+# show all header lines
 #(( $+functions[_zpresentation_header] )) ||
-# _zpresentation_header() {
-#   local -a header_list
-#   header_list=( ${(@f)"$(_call_program zpresentation zpresentation | cut -d '|' -f 1 | sort -n)"} )
-#   _describe -t current_directory_name "current directory name" directory_name
-# }
+_zpresentation_header() {
+  local -a header_list
+  header_list=( ${(@f)"$(_call_program zpresentation zpresentation -f "$opt_args[-f]" -E)"} )
+  _describe -t all_header "all header" header_list
+}
 
 _arguments -C $opts \
   $args && ret=0
