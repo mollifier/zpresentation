@@ -25,6 +25,13 @@ local curcontext=$curcontext state line ret=1
 declare -A opt_args
 
 
+#(( $+functions[_zpresentation_header] )) ||
+# _zpresentation_header() {
+#   local -a header_list
+#   header_list=( ${(@f)"$(_call_program zpresentation zpresentation | cut -d '|' -f 1 | sort -n)"} )
+#   _describe -t current_directory_name "current directory name" directory_name
+# }
+
 _arguments -C $opts \
   $args && ret=0
 

@@ -49,15 +49,48 @@ function _zpresentation_display_markdown_header()
   _zpresentation_display_all_markdown_header "$file" | sed -n "${header_id}p"
 }
 
+# すべてのヘッダ行の行番号を表示する
+function _zpresentation_display_markdown_all_header_line_number()
+{
+  local file="$1"
+  grep -nE "^#+[ \t]" -- "$file" \
+    | sed 's/:.*$//'
+}
+
+# 指定されたIDに対応するヘッダの行番号を表示する
 function _zpresentation_display_markdown_header_line_number()
 {
   local file="$1"
   # header_id is number (1, 2, 3, ...)
   local header_id="$2"
 
-  grep -nE "^#+[ \t]" -- "$file" \
-    | sed 's/:.*$//' \
-    | sed -n "${header_id}p"
+  _zpresentation_display_markdown_all_header_line_number "$file" | sed -n "${header_id}p"
+}
+
+# すべての段落を表示する
+function _zpresentation_display_markdown_all_paragraph()
+{
+  local file="$1"
+  local -a header_line_numbers
+  header_line_numbers=( ${(@f)"$(_zpresentation_display_markdown_all_header_line_number "$file")"} )
+
+  # TODO : ファイル全体の行数を取得して設定する
+  header_line_numbers=($header_line_numbers 99999)
+
+  local i
+  local line_number next_line_number
+  for ((i=1; i < $#header_line_numbers; i++)) do
+    line_number=$header_line_numbers[$i]
+    next_line_number=$header_line_numbers[$(( $i + 1 ))]
+
+    # TODO : 空の段落を取り除く
+    cat -- "$file" \
+      | sed -n "$((${line_number} + 1 )),$(( ${next_line_number} - 1 ))p" \
+      | tr -d '\n'
+    # insert line feeds
+    echo ""
+  done
+
 }
 
 # 指定した見出しから次の見出しまでを出力する
@@ -83,7 +116,7 @@ function _zpresentation_main()
   local input_file=""
 
   local option OPTARG OPTIND
-  while getopts ':f:e:p:h' option; do
+  while getopts ':f:e:p:EPh' option; do
     case $option in
       f)
         input_file="$OPTARG"
@@ -95,6 +128,12 @@ function _zpresentation_main()
       p)
         mode="paragraph"
         paragraph_id="$OPTARG"
+        ;;
+      E)
+        mode="all_header"
+        ;;
+      P)
+        mode="all_paragraph"
         ;;
       h)
         _zpresentation_print_usage
@@ -123,6 +162,12 @@ function _zpresentation_main()
       ;;
     paragraph)
       _zpresentation_display_markdown_paragraph "$input_file" "$paragraph_id"
+      ;;
+    all_header)
+      _zpresentation_display_all_markdown_header "$input_file"
+      ;;
+    all_paragraph)
+      _zpresentation_display_markdown_all_paragraph "$input_file"
       ;;
   esac
 
